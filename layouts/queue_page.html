@@ -1,0 +1,129 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title><%= site.name %> Queue</title>
+    <style>
+      body {
+        font-family: Helvetica;
+        margin: 0px;
+        padding: 0px;
+        font-size: 12px;
+      }
+      
+      h1 {
+        font-size: 20px;
+        color: white;
+        font-weight: bold;
+        margin: 0px 0px 10px 0px;
+        padding: 15px 20px;
+      }
+      
+      h1#overview {
+        background-color: #444;
+        margin-bottom: 20px;
+      }
+      
+      h1#failed {
+        background-color: #CC1111;
+        margin-top: 20px;
+      }
+      
+      article {
+        padding-left: 20px;
+      }
+      
+      dl {
+        width: 800px;
+        padding: 0px;
+        margin: 0px;
+      }
+      
+      dt, dd {
+        padding: 4px 0px;
+        margin: 0px;
+      }
+      
+      dt {
+        width: 100px;
+        padding-right: 20px;
+        text-align: right;
+        font-weight: bold;
+        color: #777;
+        float: left;
+        clear: right;
+      }
+      
+      dd {
+        width: 670px;
+        float: right;
+      }
+      
+      li {
+        border-bottom: 1px dotted #ccc;
+        padding: 20px 0px;
+        list-style-type: none;
+      }
+      
+      li:last-child {
+        border-bottom: none;
+      }
+      
+      pre {
+        margin: 0px;
+        padding: 0px;
+      }
+      
+      .clear {
+        clear: both;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 id="overview">Overview</h1>
+    <article>
+      <dl>
+        <dt>Total Tasks:</dt>
+        <dd><%= @task_count %></dd>
+        <dt>Instant Tasks:</dt>
+        <dd><%= @instant_task_count %></dd>
+        <dt>Delayed Tasks:</dt>
+        <dd><%= @delayed_task_count %></dd>
+        <dt>Failed Tasks:</dt>
+        <dd><%= @failed_tasks.size %></dd>
+      </dl>
+      <div class="clear"></div>
+    </article>
+    
+    <h1 id="failed">Failed</h1>
+    <article>
+      <% unless @failed_tasks.empty? %>
+        <ul>
+          <% @failed_tasks.each do |task| %>
+            <li>
+              <dl>
+                <dt>Type:</dt>
+                <dd><%= task.type %></dd>
+                <dt>Params:</dt>
+                <dd><%= task.params.inspect %></dd>
+                <dt>Attempts:</dt>
+                <dd><%= task.attempts %></dd>
+                <dt>Stack Trace:</dt>
+                <dd><pre><%= task.stack_trace %></pre></dd>
+                <dt></dt>
+                <dd>
+                  <form action="<%= path %>" method="post">
+                    <input type="hidden" name="id" value="<%= task.id %>">
+                    <input type="submit" value="Restart">
+                  </form>
+                </dd>
+              </dl>
+              <div class="clear"></div>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p>No failed tasks.</p>
+      <% end %>
+    </article>
+  </body>
+</html>
