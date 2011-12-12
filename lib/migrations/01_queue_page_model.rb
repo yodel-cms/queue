@@ -10,6 +10,7 @@ class QueuePageModelMigration < Migration
     # default queue page
     home_page = site.pages.where(path: '/').first
     qp = site.queue_pages.new
+    qp.show_in_menus = false
     qp.parent = home_page
     qp.title = "Queue"
     qp.save
